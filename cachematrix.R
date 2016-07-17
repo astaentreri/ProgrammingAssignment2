@@ -1,15 +1,32 @@
-## Put comments here that give an overall description of what your
-## functions do
+## uodw - set the value , wodw - get the value 
+## (sorry for variable naming, am polish, using polish abbreviations makes it
+## easier for me to conceptualize stuff that way)
 
-## Write a short comment describing this function
-
+## make the matrix that can store it's inverse in cache
 makeCacheMatrix <- function(x = matrix()) {
-
+        odw <- NULL
+        u <- function(y) {
+                x <<- y
+                odw <<- NULL
+        }
+        w <- function() x
+        uodw <- function(inverse) odw <<- inverse
+        wodw <- function() odw
+        list(u = u,
+             w = w,
+             uodw = uodw,
+             wodw = wodw)
 }
 
-
-## Write a short comment describing this function
-
+## compute the inverse of matrix. if already done, retrieve from cache
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+        odw <- x$wodw()
+        if (!is.null(odw)) {
+                message("getting cached data")
+                return(odw)
+        }
+        n_mat <- x$w()
+        odw <- solve(n_mat, ...)
+        x$uodw(odw)
+        odw
 }
